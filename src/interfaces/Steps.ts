@@ -4,6 +4,8 @@ export interface Step {
   description: string
   type: StepType
   options?: StepOption[]
+
+  value?: number | string | boolean
 }
 
 export enum StepType {

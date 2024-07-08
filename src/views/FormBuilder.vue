@@ -10,6 +10,14 @@ const stepTitles: { [key in StepType]?: string } = {
   [StepType.SELECT]: 'Select'
 }
 
+const defaultOptions: { [key in StepType]?: Step['options'] } = {
+  [StepType.RADIO]: [
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' }
+  ]
+}
+
 const steps = ref<Step[]>([
   {
     id: uuid(),
@@ -36,12 +44,16 @@ function addStepItem() {
     id: uuid(),
     title: `Step ${steps.value.length + 1}`,
     description: `This is step ${steps.value.length + 1}`,
-    type: newStep.value || StepType.TEXTAREA
+    type: newStep.value || StepType.TEXTAREA,
+    options: newStep.value ? defaultOptions[newStep.value] : []
   })
 }
 
-function handleChangeStep(id: Step['id'], value: number | string | boolean) {
-  console.log('Change step', id, value)
+function handleChange({ id, value }: { id: string; value?: string | number | boolean }) {
+  const step = steps.value.find((step) => step.id === id)
+  if (step) {
+    step.value = value
+  }
 }
 
 function removeRandomStepItem() {
@@ -52,17 +64,16 @@ function removeRandomStepItem() {
 <template>
   <h2>My Form Builder</h2>
   <TransitionGroup name="slide-fade">
-    <StepItem v-for="step in steps" :key="step.id" :step="step" @change="handleChangeStep" />
+    <StepItem v-for="step in steps" :key="step.id" :step="step" @update:modelValue="handleChange" />
   </TransitionGroup>
   <select v-model="newStep">
     <option v-for="type in Object.values(StepType)" :key="type" :value="type">
       {{ stepTitles[type] || 'PLACEHOLDER' }} - {{ type }}
     </option>
   </select>
-  <!-- Render all steps and corresponding html input elements -->
-
   <button @click="addStepItem">Add Step</button>
   <button @click="removeRandomStepItem">Remove random step</button>
+  <pre>{{ steps }}</pre>
 </template>
 
 <style scoped>
