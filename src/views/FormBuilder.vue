@@ -3,12 +3,7 @@ import { ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import { StepType, type Step } from '../interfaces/Steps'
 import StepItem from '@/components/StepItem.vue'
-
-const stepTitles: { [key in StepType]?: string } = {
-  [StepType.TEXTAREA]: 'Textarea',
-  [StepType.DATETIME]: 'DATETIME',
-  [StepType.SELECT]: 'Select'
-}
+import StepTypePicker from '@/components/StepTypePicker.vue';
 
 const defaultOptions: { [key in StepType]?: Step['options'] } = {
   [StepType.RADIO]: [
@@ -49,13 +44,6 @@ function addStepItem() {
   })
 }
 
-function handleChange({ id, value }: { id: string; value?: string | number | boolean }) {
-  const step = steps.value.find((step) => step.id === id)
-  if (step) {
-    step.value = value
-  }
-}
-
 function removeRandomStepItem() {
   steps.value.splice(Math.floor(Math.random() * steps.value.length), 1)
 }
@@ -64,13 +52,9 @@ function removeRandomStepItem() {
 <template>
   <h2>My Form Builder</h2>
   <TransitionGroup name="slide-fade">
-    <StepItem v-for="step in steps" :key="step.id" :step="step" @update:modelValue="handleChange" />
+    <StepItem v-for="step in steps" :key="step.id" :step="step" v-model="step.value" />
   </TransitionGroup>
-  <select v-model="newStep">
-    <option v-for="type in Object.values(StepType)" :key="type" :value="type">
-      {{ stepTitles[type] || 'PLACEHOLDER' }} - {{ type }}
-    </option>
-  </select>
+  <StepTypePicker v-model="newStep" />
   <button @click="addStepItem">Add Step</button>
   <button @click="removeRandomStepItem">Remove random step</button>
   <pre>{{ steps }}</pre>

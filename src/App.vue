@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/">Overview</RouterLink>
-        <RouterLink to="/forms">Forms</RouterLink>
+        <RouterLink to="/">Formbuilder</RouterLink>
       </nav>
     </div>
   </header>

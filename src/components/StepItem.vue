@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import { StepType, type Step } from '@/interfaces/Steps'
-import { defineProps, computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 export interface Props {
   step: Step
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['update:modelValue'])
-
+const value = defineModel<Step["value"]>()
 const title = computed(() => `${props.step.title} - ${props.step.type} - ${props.step.id}`)
-const value = ref<string | number | boolean | null>(props.step.value || null)
 
-watch(value, (newValue) => {
-  emit('update:modelValue', { id: props.step.id, value: newValue })
-})
 </script>
 
 <template>
